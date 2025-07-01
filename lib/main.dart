@@ -1,6 +1,7 @@
 import 'package:device_preview_plus/device_preview_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:plywood/provider/category_provider.dart';
 import 'package:plywood/provider/login_provider.dart';
 import 'package:plywood/screens/login_page.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,8 @@ void main() => runApp(
         enabled: !kReleaseMode,
         builder: (context) => MultiProvider(providers: [
           ChangeNotifierProvider(create: (_) => LoginProvider()),
-        ], child: MyApp()), // Wrap your app
+          ChangeNotifierProvider(create: (_) => CategoryProvider()),
+        ], child: MyApp()),
       ),
     );
 

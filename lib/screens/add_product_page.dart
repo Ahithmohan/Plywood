@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:plywood/widgets/build_elevated_button_widget.dart';
 import 'package:plywood/widgets/build_text_field_widget.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/category_provider.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -10,12 +13,21 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
-  final List<String> _categories = ['Plywood', 'MDF', 'Blockboard', 'Veneer'];
   String? _selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<CategoryProvider>(context, listen: false).getCategories();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final provider = Provider.of<CategoryProvider>(context);
+    final categories = provider.categories;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -38,7 +50,6 @@ class _AddProductPageState extends State<AddProductPage> {
                     color: Colors.white70),
               ),
               const SizedBox(height: 20),
-              // Category Dropdown
               DropdownButtonFormField<String>(
                 dropdownColor: Colors.grey[900],
                 style: const TextStyle(color: Colors.white),
@@ -68,10 +79,10 @@ class _AddProductPageState extends State<AddProductPage> {
                   ),
                 ),
                 value: _selectedCategory,
-                items: _categories.map((category) {
+                items: categories.map((cat) {
                   return DropdownMenuItem<String>(
-                    value: category,
-                    child: Text(category),
+                    value: cat['_id'],
+                    child: Text(cat['type']),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -108,15 +119,16 @@ class _AddProductPageState extends State<AddProductPage> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                  width: width / 1.5,
-                  child: BuildElevatedButtonWidget(
-                    backgroundColor: Colors.orange,
-                    text: "Add Product",
-                    onPressed: () {},
-                  )),
-              SizedBox(
-                height: 80,
-              )
+                width: width / 1.5,
+                child: BuildElevatedButtonWidget(
+                  backgroundColor: Colors.orange,
+                  text: "Add Product",
+                  onPressed: () {
+                    // handle add product
+                  },
+                ),
+              ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:plywood/widgets/build_elevated_button_widget.dart';
 import 'package:plywood/widgets/build_text_field_widget.dart';
+import 'package:plywood/widgets/build_text_widget.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/category_provider.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -11,21 +15,49 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   final TextEditingController _categoryController = TextEditingController();
-  final List<String> _categories = [];
 
-  void _addCategory() {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<CategoryProvider>(context, listen: false);
+      if (mounted && provider.categories.isEmpty) {
+        provider.getCategories();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _categoryController.dispose();
+    super.dispose();
+  }
+
+  void _addCategory() async {
     final newCategory = _categoryController.text.trim();
     if (newCategory.isNotEmpty) {
-      setState(() {
-        _categories.add(newCategory);
-        _categoryController.clear(); // Clear input after adding
-      });
+      final provider = Provider.of<CategoryProvider>(context, listen: false);
+      final success = await provider.addCategory(newCategory);
+
+      if (success) {
+        _categoryController.clear();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Category added successfully')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to add category')),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final provider = Provider.of<CategoryProvider>(context);
+    final isLoading = provider.isLoading;
+    final categories = provider.categories;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -57,32 +89,93 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: _categories.isEmpty
-                  ? const Text(
-                      'No categories added yet',
-                      style: TextStyle(color: Colors.white54),
-                    )
-                  : ListView.builder(
-                      itemCount: _categories.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          color: Colors.grey[800],
-                          child: ListTile(
-                            trailing: GestureDetector(
-                              onTap: () {},
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.red,
+              child: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(color: Colors.orange))
+                  : categories.isEmpty
+                      ? const Text(
+                          'No categories added yet',
+                          style: TextStyle(color: Colors.white54),
+                        )
+                      : ListView.builder(
+                          itemCount: categories.length,
+                          itemBuilder: (context, index) {
+                            final item = categories[index];
+                            final id = item['_id'];
+                            final type = item['type'];
+
+                            return Card(
+                              color: Colors.grey[800],
+                              child: ListTile(
+                                title: Text(
+                                  type,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                trailing: GestureDetector(
+                                  onTap: () async {
+                                    final confirm = await showDialog<bool>(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        backgroundColor: Colors.grey[900],
+                                        title: BuildTextWidget(
+                                          text: "Confirm Delete",
+                                          color: Colors.white,
+                                        ),
+                                        content: Text(
+                                          'Are you sure you want to delete "$type"?',
+                                          style:
+                                              TextStyle(color: Colors.white70),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, false),
+                                            child: const Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, true),
+                                            child: const Text(
+                                              'Delete',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+
+                                    // 🔐 Check again after dialog, context may be invalid if widget was removed
+                                    if (!mounted || confirm != true) return;
+
+                                    final success =
+                                        await Provider.of<CategoryProvider>(
+                                      context,
+                                      listen: false,
+                                    ).deleteCategory(id);
+
+                                    // 🔐 Check again after await
+                                    if (!mounted) return;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(success
+                                            ? 'Category deleted'
+                                            : 'Failed to delete category'),
+                                      ),
+                                    );
+                                  },
+                                  child: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                ),
                               ),
-                            ),
-                            title: Text(
-                              _categories[index],
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                          },
+                        ),
             ),
           ],
         ),

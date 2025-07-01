@@ -108,39 +108,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 SizedBox(
                   height: 40,
                 ),
-                // SizedBox(
-                //   width: width / 1.5,
-                //   child: BuildElevatedButtonWidget(
-                //     text: "Submit",
-                //     backgroundColor: Colors.orange,
-                //     onPressed: () async {
-                //       final loginProvider =
-                //           Provider.of<LoginProvider>(context, listen: false);
-                //       final success = await loginProvider.updateAdminDetails(
-                //           _usernameController.text.trim(),
-                //           _passwordController.text.trim(),
-                //           _emailController.text.trim(),
-                //           _phoneController.text.trim());
-                //
-                //       if (success) {
-                //         ScaffoldMessenger.of(context).showSnackBar(
-                //           const SnackBar(
-                //             content: Text('Admin details updated successfully'),
-                //             backgroundColor: Colors.green,
-                //           ),
-                //         );
-                //         loginProvider.fetchAdminDetails();
-                //       } else {
-                //         ScaffoldMessenger.of(context).showSnackBar(
-                //           const SnackBar(
-                //             content: Text('Failed to update admin details'),
-                //             backgroundColor: Colors.red,
-                //           ),
-                //         );
-                //       }
-                //     },
-                //   ),
-                // ),
                 Consumer<LoginProvider>(
                   builder: (context, loginProvider, child) {
                     return SizedBox(
@@ -186,7 +153,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     );
                   },
                 ),
-
                 SizedBox(
                   height: 20,
                 ),
