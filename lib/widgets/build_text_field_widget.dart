@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class BuildTextFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
+  final TextInputType? keyboardType;
   final String hintText;
   final Icon? icon;
   final String? Function(String?)? validator;
@@ -12,6 +13,7 @@ class BuildTextFieldWidget extends StatelessWidget {
     required this.hintText,
     this.validator,
     this.icon,
+    this.keyboardType,
   });
 
   @override
@@ -38,6 +40,7 @@ class BuildTextFieldWidget extends StatelessWidget {
               ),
               child: TextField(
                 style: const TextStyle(color: Colors.white),
+                keyboardType: keyboardType,
                 controller: controller,
                 decoration: InputDecoration(
                   icon: icon,

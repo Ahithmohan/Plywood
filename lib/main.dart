@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:plywood/provider/category_provider.dart';
 import 'package:plywood/provider/login_provider.dart';
+import 'package:plywood/provider/purchase_provider.dart';
 import 'package:plywood/screens/login_page.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,7 @@ void main() => runApp(
         builder: (context) => MultiProvider(providers: [
           ChangeNotifierProvider(create: (_) => LoginProvider()),
           ChangeNotifierProvider(create: (_) => CategoryProvider()),
+          ChangeNotifierProvider(create: (_) => PurchaseProvider()),
         ], child: MyApp()),
       ),
     );
