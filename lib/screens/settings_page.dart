@@ -39,6 +39,18 @@ class _SettingsPageState extends State<SettingsPage> {
                     hintText: "Password",
                     icon: const Icon(Icons.password, color: Colors.white70)),
                 SizedBox(
+                  height: 20,
+                ),
+                BuildTextFieldWidget(
+                    hintText: "Email",
+                    icon: const Icon(Icons.email, color: Colors.white70)),
+                SizedBox(
+                  height: 20,
+                ),
+                BuildTextFieldWidget(
+                    hintText: "Phone Number",
+                    icon: const Icon(Icons.phone, color: Colors.white70)),
+                SizedBox(
                   height: 40,
                 ),
                 SizedBox(

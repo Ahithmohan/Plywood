@@ -1,12 +1,16 @@
 import 'package:device_preview_plus/device_preview_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:plywood/provider/login_provider.dart';
 import 'package:plywood/screens/login_page.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(
       DevicePreview(
         enabled: !kReleaseMode,
-        builder: (context) => MyApp(), // Wrap your app
+        builder: (context) => MultiProvider(providers: [
+          ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ], child: MyApp()), // Wrap your app
       ),
     );
 

@@ -67,6 +67,24 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                width: width / 2,
+                height: 25,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.orange,
+                ),
+                child: Center(
+                  child: BuildTextWidget(
+                    text: "Company Details",
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 children: [
                   Text(
@@ -93,11 +111,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.white,
               ),
               BuildTextWidget(
-                text: "User: Admin",
-                fontSize: 18,
-                color: Colors.white,
-              ),
-              BuildTextWidget(
                 text: "plywood12@gmail.com",
                 fontSize: 18,
                 color: Colors.white,
@@ -111,6 +124,42 @@ class _ProfilePageState extends State<ProfilePage> {
                 text: "GST: 27AABFP6165G1Z6",
                 color: Colors.white,
                 fontSize: 18,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: width / 2,
+                height: 25,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.orange,
+                ),
+                child: Center(
+                  child: BuildTextWidget(
+                    text: "Admin Details",
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              BuildTextWidget(
+                text: "User: Admin",
+                fontSize: 18,
+                color: Colors.white,
+              ),
+              BuildTextWidget(
+                text: "plywood12@gmail.com",
+                fontSize: 18,
+                color: Colors.white,
+              ),
+              BuildTextWidget(
+                text: "Phone: 8086433977",
+                fontSize: 18,
+                color: Colors.white,
               ),
             ],
           ),
