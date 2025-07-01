@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:plywood/screens/settings_page.dart';
 import 'package:plywood/widgets/build_elevated_button_widget.dart';
 import 'package:plywood/widgets/build_text_widget.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/login_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,10 +16,29 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<LoginProvider>(context, listen: false).fetchAdminDetails();
+    });
+  }
+
+  bool isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
+    final admin = Provider.of<LoginProvider>(context).adminDetails;
+    if (admin == null) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: CircularProgressIndicator(color: Colors.orange),
+        ),
+      );
+    }
     return Scaffold(
         bottomNavigationBar: Container(
           height: height / 4,
@@ -147,17 +169,22 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 20,
               ),
               BuildTextWidget(
-                text: "User: Admin",
+                text: "User Name: ${admin!.username}",
                 fontSize: 18,
                 color: Colors.white,
               ),
               BuildTextWidget(
-                text: "plywood12@gmail.com",
+                text: "Email: ${admin.email}",
                 fontSize: 18,
                 color: Colors.white,
               ),
               BuildTextWidget(
-                text: "Phone: 8086433977",
+                text: "Phone: ${admin.contactNumber}",
+                fontSize: 18,
+                color: Colors.white,
+              ),
+              BuildTextWidget(
+                text: "Created: ${admin.createdAt}",
                 fontSize: 18,
                 color: Colors.white,
               ),
