@@ -133,4 +133,42 @@ class PurchaseProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  // delete purchase
+  Future<bool> deletePurchase(String id) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final url =
+        "https://plywood-backend-t3v1.onrender.com/api/Purchase/delete/$id";
+
+    try {
+      final response = await Dio().delete(
+        url,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => status != null && status < 500,
+          headers: {"Content-Type": "application/json"},
+        ),
+      );
+
+      _isLoading = false;
+      notifyListeners();
+
+      if (response.statusCode == 200) {
+        // Remove deleted item from list locally
+        _purchaseList.removeWhere((item) => item.id == id);
+        notifyListeners();
+        return true;
+      }
+
+      debugPrint("Delete failed: ${response.statusCode}");
+      return false;
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      debugPrint("Delete error: $e");
+      return false;
+    }
+  }
 }

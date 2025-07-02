@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plywood/screens/product_view.dart';
 import 'package:plywood/widgets/heading_widget.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/product_provider.dart';
 
 class HomeViewPage extends StatefulWidget {
   final ScrollController? scrollController;
@@ -14,7 +17,18 @@ class HomeViewPage extends StatefulWidget {
 
 class _HomeViewPageState extends State<HomeViewPage> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final productProvider = Provider.of<ProductProvider>(context);
+    final products = productProvider.products;
+
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -77,92 +91,108 @@ class _HomeViewPageState extends State<HomeViewPage> {
             ),
           ),
           Expanded(
-            child: Container(
-              color: Colors.black,
-              width: width,
-              child: GridView.count(
-                controller: widget.scrollController,
-                crossAxisCount: 2,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
-                padding: const EdgeInsets.all(5.0),
-                children: List.generate(40, (index) {
-                  return SizedBox(
-                    width: width / 2.5,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ProductView()),
+            child: productProvider.isLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                    color: Colors.orange,
+                  ))
+                : Container(
+                    color: Colors.black,
+                    width: width,
+                    child: GridView.count(
+                      controller: widget.scrollController,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                      padding: const EdgeInsets.all(5.0),
+                      children: products.map((product) {
+                        return SizedBox(
+                          width: width / 2.5,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductView(
+                                          productId: product.id,
+                                        )),
+                              );
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      width: width,
+                                      height: height / 8,
+                                      decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              "https://static.vecteezy.com/system/resources/thumbnails/006/793/295/small/wood-texture-pattern-dark-brown-design-background-vector.jpg"),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              product.name,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: GoogleFonts.spicyRice(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            "₹${product.price}",
+                                            style: GoogleFonts.spicyRice(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Grade",
+                                          style: GoogleFonts.manrope(
+                                              color: Colors.black,
+                                              fontSize: 17),
+                                        ),
+                                        Text(
+                                          product.grade,
+                                          style: GoogleFonts.manrope(
+                                              color: Colors.black,
+                                              fontSize: 17),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         );
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: width,
-                                height: height / 8,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        "https://static.vecteezy.com/system/resources/thumbnails/006/793/295/small/wood-texture-pattern-dark-brown-design-background-vector.jpg"),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Plywood",
-                                    style: GoogleFonts.spicyRice(
-                                        color: Colors.black, fontSize: 20),
-                                  ),
-                                  Text(
-                                    "\$350",
-                                    style: GoogleFonts.spicyRice(
-                                        color: Colors.black, fontSize: 18),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Grade",
-                                    style: GoogleFonts.manrope(
-                                        color: Colors.black, fontSize: 20),
-                                  ),
-                                  Text(
-                                    "A+",
-                                    style: GoogleFonts.manrope(
-                                        color: Colors.black, fontSize: 18),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      }).toList(),
                     ),
-                  );
-                }),
-              ),
-            ),
+                  ),
           ),
         ],
       ),

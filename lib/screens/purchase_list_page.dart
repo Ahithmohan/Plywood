@@ -112,7 +112,71 @@ class _PurchaseListPageState extends State<PurchaseListPage> {
                                       BuildElevatedButtonWidget(
                                         text: "Delete",
                                         backgroundColor: Colors.red,
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          final confirm =
+                                              await showDialog<bool>(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              backgroundColor: Colors.grey[900],
+                                              title: const Text(
+                                                "Confirm Delete",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              content: const Text(
+                                                "Are you sure you want to delete this purchase?",
+                                                style: TextStyle(
+                                                    color: Colors.white70),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, false),
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, true),
+                                                  child: const Text(
+                                                    "Delete",
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+
+                                          if (confirm == true) {
+                                            final provider =
+                                                Provider.of<PurchaseProvider>(
+                                                    context,
+                                                    listen: false);
+                                            final success = await provider
+                                                .deletePurchase(item.id);
+                                            if (!mounted) return;
+
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  success
+                                                      ? "Purchase deleted successfully"
+                                                      : "Failed to delete purchase",
+                                                ),
+                                                backgroundColor: success
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                              ),
+                                            );
+                                          }
+                                        },
                                       ),
                                     ],
                                   )
