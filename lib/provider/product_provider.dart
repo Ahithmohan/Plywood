@@ -97,4 +97,67 @@ class ProductProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  //update product
+  Future<bool> updateProduct(
+      String id, Map<String, dynamic> productData) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final response = await Dio().put(
+        'https://plywood-backend-t3v1.onrender.com/api/Plywood/update/$id',
+        data: productData,
+      );
+      if (response.statusCode == 200) {
+        _hasLoaded = false;
+        await fetchProducts();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("Update Product Error: $e");
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // get product by id
+  Future<ProductModel?> getProductById(String productId) async {
+    try {
+      final response = await Dio().get(
+        'https://plywood-backend-t3v1.onrender.com/api/Plywood/$productId',
+      );
+      if (response.statusCode == 200) {
+        return ProductModel.fromJson(response.data);
+      }
+      return null;
+    } catch (e) {
+      print("Get Product by ID Error: $e");
+      return null;
+    }
+  }
+
+  //add stock toggle
+  Future<bool> toggleProductStock(String id, bool currentStock) async {
+    try {
+      final response = await Dio().put(
+        'https://plywood-backend-t3v1.onrender.com/api/Plywood/update/$id',
+        data: {
+          'stock': !currentStock,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        _hasLoaded = false;
+        await fetchProducts(); // refresh cache
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("Toggle Stock Error: $e");
+      return false;
+    }
+  }
 }

@@ -73,4 +73,27 @@ class CategoryProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+// Update Category by ID
+  Future<bool> updateCategory(String id, String newType) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final url =
+        'https://plywood-backend-t3v1.onrender.com/api/Category/update/$id';
+    try {
+      final response = await _dio.put(url, data: {"type": newType});
+      if (response.statusCode == 200) {
+        await getCategories(); // Refresh the list
+        return true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint("Update category error: $e");
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

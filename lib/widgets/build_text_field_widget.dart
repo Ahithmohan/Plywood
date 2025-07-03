@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 class BuildTextFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
+  final FocusNode? focusNode;
+
   final String hintText;
   final Icon? icon;
+  final Widget? suffixIcon;
   final String? Function(String?)? validator;
 
   const BuildTextFieldWidget({
@@ -14,6 +17,8 @@ class BuildTextFieldWidget extends StatelessWidget {
     this.validator,
     this.icon,
     this.keyboardType,
+    this.suffixIcon,
+    this.focusNode,
   });
 
   @override
@@ -39,11 +44,13 @@ class BuildTextFieldWidget extends StatelessWidget {
                 ),
               ),
               child: TextField(
+                focusNode: focusNode,
                 style: const TextStyle(color: Colors.white),
                 keyboardType: keyboardType,
                 controller: controller,
                 decoration: InputDecoration(
                   icon: icon,
+                  suffix: suffixIcon,
                   hintText: hintText,
                   hintStyle: const TextStyle(color: Colors.white70),
                   border: InputBorder.none, // Removed border from TextFormField

@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:plywood/screens/add_product_page.dart';
 import 'package:plywood/widgets/build_elevated_button_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -25,15 +25,31 @@ class _ProductViewState extends State<ProductView> {
     fetchProductDetails();
   }
 
+  // Future<void> fetchProductDetails() async {
+  //   try {
+  //     final response = await Dio().get(
+  //       "https://plywood-backend-t3v1.onrender.com/api/Plywood/${widget.productId}",
+  //     );
+  //     setState(() {
+  //       product = ProductModel.fromJson(response.data);
+  //       print(product!.name);
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     print("Failed to load product: $e");
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
   Future<void> fetchProductDetails() async {
+    final provider = Provider.of<ProductProvider>(context, listen: false);
     try {
-      final response = await Dio().get(
-        "https://plywood-backend-t3v1.onrender.com/api/Plywood/${widget.productId}",
-      );
+      final fetchedProduct = await provider.getProductById(widget.productId);
       setState(() {
-        product = ProductModel.fromJson(response.data);
-        print(product!.name);
+        product = fetchedProduct;
         isLoading = false;
+        print(product!.stock);
       });
     } catch (e) {
       print("Failed to load product: $e");
@@ -62,7 +78,27 @@ class _ProductViewState extends State<ProductView> {
                 child: BuildElevatedButtonWidget(
                   backgroundColor: Colors.green,
                   text: "Edit",
-                  onPressed: () {},
+                  // onPressed: () {
+                  //   Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => AddProductPage(
+                  //           product: product,
+                  //         ),
+                  //       ));
+                  // },
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddProductPage(product: product),
+                      ),
+                    );
+
+                    if (result == true) {
+                      fetchProductDetails(); // <- fetch latest data from server
+                    }
+                  },
                 ),
               ),
               SizedBox(
@@ -219,10 +255,33 @@ class _ProductViewState extends State<ProductView> {
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                         BuildElevatedButtonWidget(
-                          text: "Stock Out",
-                          backgroundColor: Colors.red,
-                          onPressed: () {},
-                        )
+                          text: product!.stock ? "Stock In" : "Stock Out",
+                          backgroundColor:
+                              product!.stock ? Colors.green : Colors.red,
+                          onPressed: () async {
+                            final provider = Provider.of<ProductProvider>(
+                                context,
+                                listen: false);
+                            final success = await provider.toggleProductStock(
+                                product!.id, product!.stock);
+
+                            if (success) {
+                              await fetchProductDetails(); // Refresh the product state
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(product!.stock
+                                    ? "Stock marked as Out"
+                                    : "Stock marked as In"),
+                              ));
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Failed to update stock status"),
+                              ));
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ),

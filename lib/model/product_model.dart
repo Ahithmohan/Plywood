@@ -7,6 +7,7 @@ class ProductModel {
   final String grade;
   final int quantity;
   final int price;
+  final bool stock; // <-- added field
   final DateTime createdAt;
   final DateTime updatedAt;
   final int v; // for __v
@@ -20,6 +21,7 @@ class ProductModel {
     required this.grade,
     required this.quantity,
     required this.price,
+    required this.stock, // <-- added field
     required this.createdAt,
     required this.updatedAt,
     required this.v,
@@ -35,6 +37,7 @@ class ProductModel {
       grade: json['grade'],
       quantity: json['quantity'],
       price: json['price'],
+      stock: json['stock'], // <-- added field
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       v: json['__v'],
@@ -51,6 +54,7 @@ class ProductModel {
       'grade': grade,
       'quantity': quantity,
       'price': price,
+      'stock': stock, // <-- added field
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       '__v': v,

@@ -5,6 +5,7 @@ import 'package:plywood/widgets/build_elevated_button_widget.dart';
 import 'package:plywood/widgets/build_text_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/company_provider.dart';
 import '../provider/login_provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -21,6 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<LoginProvider>(context, listen: false).fetchAdminDetails();
+      Provider.of<CompanyProvider>(context, listen: false)
+          .fetchCompanyDetails();
     });
   }
 
@@ -31,7 +34,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final admin = Provider.of<LoginProvider>(context).adminDetails;
-    if (admin == null) {
+    final company = Provider.of<CompanyProvider>(context).companyDetails;
+    if (admin == null || company == null) {
       return const Scaffold(
         backgroundColor: Colors.black,
         body: Center(
@@ -110,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Row(
                 children: [
                   Text(
-                    'Plywood Company',
+                    company["companyName"] ?? 'Plywood Company',
                     style: GoogleFonts.spicyRice(
                         color: Colors.white, fontSize: 29),
                   ),
@@ -122,28 +126,28 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               BuildTextWidget(
-                text:
+                text: company["address"] ??
                     "The Western India Plywoods Ltd Baliapatam, Kannur,Kerala, India",
                 color: Colors.white,
                 fontSize: 18,
               ),
               BuildTextWidget(
-                text: "PIN: 964645",
+                text: "PIN: ${company["pincode"] ?? "670561"}",
                 fontSize: 18,
                 color: Colors.white,
               ),
               BuildTextWidget(
-                text: "plywood12@gmail.com",
+                text: "Gmail: ${company["email"] ?? "plywood12@gmail.com"}",
                 fontSize: 18,
                 color: Colors.white,
               ),
               BuildTextWidget(
-                text: "Phone: 8086433977",
+                text: "Phone: ${company["contactNumber"] ?? "1234567890"}",
                 fontSize: 18,
                 color: Colors.white,
               ),
               BuildTextWidget(
-                text: "GST: 27AABFP6165G1Z6",
+                text: "GST: ${company["gstin"] ?? "27AAAPL1234A1Z5"}",
                 color: Colors.white,
                 fontSize: 18,
               ),

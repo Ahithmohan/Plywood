@@ -3,11 +3,14 @@ import 'package:plywood/widgets/build_elevated_button_widget.dart';
 import 'package:plywood/widgets/build_text_field_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../model/product_model.dart';
 import '../provider/category_provider.dart';
 import '../provider/product_provider.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({super.key});
+  final ProductModel? product;
+
+  const AddProductPage({super.key, this.product});
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
@@ -20,6 +23,16 @@ class _AddProductPageState extends State<AddProductPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<CategoryProvider>(context, listen: false).getCategories();
     });
+
+    if (widget.product != null) {
+      _nameController.text = widget.product!.name;
+      _selectedCategory = widget.product!.category;
+      _sizeController.text = widget.product!.size;
+      _thicknessController.text = widget.product!.thickness;
+      _gradeController.text = widget.product!.grade;
+      _quantityController.text = widget.product!.quantity.toString();
+      _priceController.text = widget.product!.price.toString();
+    }
   }
 
   String? _selectedCategory;
@@ -147,46 +160,100 @@ class _AddProductPageState extends State<AddProductPage> {
               SizedBox(
                 width: width / 1.5,
                 child: BuildElevatedButtonWidget(
-                  backgroundColor: Colors.orange,
-                  text: "Add Product",
-                  onPressed: () async {
-                    final productProvider =
-                        Provider.of<ProductProvider>(context, listen: false);
+                    backgroundColor: Colors.orange,
+                    text: widget.product != null
+                        ? "Update Product"
+                        : "Add Product",
 
-                    final productData = {
-                      "name": _nameController.text.trim(),
-                      "category": _selectedCategory ?? "",
-                      "size": _sizeController.text.trim(),
-                      "thickness": _thicknessController.text.trim(),
-                      "grade": _gradeController.text.trim(),
-                      "quantity":
-                          int.tryParse(_quantityController.text.trim()) ?? 0,
-                      "price": int.tryParse(_priceController.text.trim()) ?? 0,
-                    };
+                    // text: "Add Product",
+                    // onPressed: () async {
+                    //   final productProvider =
+                    //       Provider.of<ProductProvider>(context, listen: false);
+                    //
+                    //   final productData = {
+                    //     "name": _nameController.text.trim(),
+                    //     "category": _selectedCategory ?? "",
+                    //     "size": _sizeController.text.trim(),
+                    //     "thickness": _thicknessController.text.trim(),
+                    //     "grade": _gradeController.text.trim(),
+                    //     "quantity":
+                    //         int.tryParse(_quantityController.text.trim()) ?? 0,
+                    //     "price": int.tryParse(_priceController.text.trim()) ?? 0,
+                    //   };
+                    //
+                    //   final success =
+                    //       await productProvider.addProduct(productData);
+                    //   if (success) {
+                    //     ScaffoldMessenger.of(context).showSnackBar(
+                    //       const SnackBar(
+                    //           content: Text("Product added successfully")),
+                    //     );
+                    //     _nameController.clear();
+                    //     _priceController.clear();
+                    //     _quantityController.clear();
+                    //     _gradeController.clear();
+                    //     _sizeController.clear();
+                    //     _thicknessController.clear();
+                    //     setState(() {
+                    //       _selectedCategory = null;
+                    //     });
+                    //   } else {
+                    //     ScaffoldMessenger.of(context).showSnackBar(
+                    //       const SnackBar(content: Text("Failed to add product")),
+                    //     );
+                    //   }
+                    // },
+                    onPressed: () async {
+                      final productProvider =
+                          Provider.of<ProductProvider>(context, listen: false);
 
-                    final success =
-                        await productProvider.addProduct(productData);
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Product added successfully")),
-                      );
-                      _nameController.clear();
-                      _priceController.clear();
-                      _quantityController.clear();
-                      _gradeController.clear();
-                      _sizeController.clear();
-                      _thicknessController.clear();
-                      setState(() {
-                        _selectedCategory = null;
-                      });
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Failed to add product")),
-                      );
-                    }
-                  },
-                ),
+                      final productData = {
+                        "name": _nameController.text.trim(),
+                        "category": _selectedCategory ?? "",
+                        "size": _sizeController.text.trim(),
+                        "thickness": _thicknessController.text.trim(),
+                        "grade": _gradeController.text.trim(),
+                        "quantity":
+                            int.tryParse(_quantityController.text.trim()) ?? 0,
+                        "price":
+                            int.tryParse(_priceController.text.trim()) ?? 0,
+                      };
+
+                      bool success;
+                      if (widget.product != null) {
+                        success = await productProvider.updateProduct(
+                            widget.product!.id!, productData);
+                        productProvider.fetchProducts(); // optional
+                      } else {
+                        success = await productProvider.addProduct(productData);
+                      }
+
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(widget.product != null
+                              ? "Product updated successfully"
+                              : "Product added successfully"),
+                        ));
+
+                        if (widget.product == null) {
+                          _nameController.clear();
+                          _priceController.clear();
+                          _quantityController.clear();
+                          _gradeController.clear();
+                          _sizeController.clear();
+                          _thicknessController.clear();
+                          setState(() => _selectedCategory = null);
+                        } else {
+                          Navigator.pop(context,
+                              true); // ✅ return true to trigger re-fetch
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("Failed to submit product")),
+                        );
+                      }
+                    }),
               ),
               const SizedBox(height: 80),
             ],
