@@ -113,15 +113,15 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               Row(
                 children: [
-                  Text(
-                    company["companyName"] ?? 'Plywood Company',
-                    style: GoogleFonts.spicyRice(
-                        color: Colors.white, fontSize: 29),
-                  ),
-                  Text(
-                    '!',
-                    style: GoogleFonts.spicyRice(
-                        color: Colors.orange, fontSize: 29),
+                  Expanded(
+                    child: Text(
+                      company["companyName"] ?? 'Plywood Company',
+                      style: GoogleFonts.spicyRice(
+                        color: Colors.white,
+                        fontSize: 29,
+                      ),
+                      overflow: TextOverflow.ellipsis, // prevent overflow
+                    ),
                   ),
                 ],
               ),

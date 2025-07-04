@@ -11,13 +11,62 @@ class PurchaseProvider extends ChangeNotifier {
   List<PurchaseModel> get purchaseList => _purchaseList;
 
   //add purchases
+  // Future<bool> addPurchase({
+  //   required String customerName,
+  //   required String customerNumber, // <- added
+  //   required String product,
+  //   required int quantity,
+  //   required String date,
+  //   required int price,
+  // }) async {
+  //   _isLoading = true;
+  //   notifyListeners();
+  //
+  //   final url = "https://plywood-backend-t3v1.onrender.com/api/Purchase/add";
+  //
+  //   final data = {
+  //     "customerName": customerName,
+  //     "customerNumber": customerNumber, // <- added
+  //     "product": product,
+  //     "quantity": quantity,
+  //     "date": date,
+  //     "price": price,
+  //   };
+  //
+  //   debugPrint("Sending purchase data: $data");
+  //
+  //   try {
+  //     final response = await Dio().post(
+  //       url,
+  //       data: data,
+  //       options: Options(
+  //         followRedirects: false,
+  //         validateStatus: (status) => status != null && status < 500,
+  //         headers: {"Content-Type": "application/json"},
+  //       ),
+  //     );
+  //
+  //     debugPrint("Status: ${response.statusCode}");
+  //     debugPrint("Response: ${response.data}");
+  //
+  //     _isLoading = false;
+  //     notifyListeners();
+  //
+  //     return response.statusCode == 200 || response.statusCode == 201;
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     notifyListeners();
+  //     debugPrint("Purchase API error: $e");
+  //     return false;
+  //   }
+  // }
+
+  // Add purchases (multiple products)
   Future<bool> addPurchase({
     required String customerName,
-    required String customerNumber, // <- added
-    required String product,
-    required int quantity,
+    required String customerNumber,
     required String date,
-    required int price,
+    required List<Map<String, dynamic>> products,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -26,14 +75,10 @@ class PurchaseProvider extends ChangeNotifier {
 
     final data = {
       "customerName": customerName,
-      "customerNumber": customerNumber, // <- added
-      "product": product,
-      "quantity": quantity,
+      "customerNumber": customerNumber,
       "date": date,
-      "price": price,
+      "products": products,
     };
-
-    debugPrint("Sending purchase data: $data");
 
     try {
       final response = await Dio().post(
@@ -45,9 +90,6 @@ class PurchaseProvider extends ChangeNotifier {
           headers: {"Content-Type": "application/json"},
         ),
       );
-
-      debugPrint("Status: ${response.statusCode}");
-      debugPrint("Response: ${response.data}");
 
       _isLoading = false;
       notifyListeners();
@@ -87,14 +129,59 @@ class PurchaseProvider extends ChangeNotifier {
   }
 
   // update purchase
+  // Future<bool> updatePurchase({
+  //   required String id,
+  //   required String customerName,
+  //   required String customerNumber,
+  //   required String product,
+  //   required int quantity,
+  //   required String date,
+  //   required int price,
+  // }) async {
+  //   _isLoading = true;
+  //   notifyListeners();
+  //
+  //   final url =
+  //       "https://plywood-backend-t3v1.onrender.com/api/Purchase/update/$id";
+  //
+  //   final data = {
+  //     "customerName": customerName,
+  //     "customerNumber": customerNumber,
+  //     "product": product,
+  //     "quantity": quantity,
+  //     "date": date,
+  //     "price": price,
+  //   };
+  //
+  //   try {
+  //     final response = await Dio().put(
+  //       url,
+  //       data: data,
+  //       options: Options(
+  //         followRedirects: false,
+  //         validateStatus: (status) => status != null && status < 500,
+  //         headers: {"Content-Type": "application/json"},
+  //       ),
+  //     );
+  //
+  //     _isLoading = false;
+  //     notifyListeners();
+  //
+  //     return response.statusCode == 200;
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     notifyListeners();
+  //     debugPrint("Update API error: $e");
+  //     return false;
+  //   }
+  // }
+
   Future<bool> updatePurchase({
     required String id,
     required String customerName,
     required String customerNumber,
-    required String product,
-    required int quantity,
     required String date,
-    required int price,
+    required List<Map<String, dynamic>> products,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -105,10 +192,8 @@ class PurchaseProvider extends ChangeNotifier {
     final data = {
       "customerName": customerName,
       "customerNumber": customerNumber,
-      "product": product,
-      "quantity": quantity,
       "date": date,
-      "price": price,
+      "products": products,
     };
 
     try {
