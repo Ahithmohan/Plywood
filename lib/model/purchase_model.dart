@@ -38,6 +38,7 @@ class PurchaseModel {
   final String customerNumber;
   final String date;
   final List<Map<String, dynamic>> products;
+  final int totalAmount; // <-- New field
 
   PurchaseModel({
     required this.id,
@@ -45,6 +46,7 @@ class PurchaseModel {
     required this.customerNumber,
     required this.date,
     required this.products,
+    required this.totalAmount, // <-- New field
   });
 
   factory PurchaseModel.fromJson(Map<String, dynamic> json) {
@@ -66,6 +68,18 @@ class PurchaseModel {
       date:
           json['date'] != null ? json['date'].toString().substring(0, 10) : '',
       products: parsedProducts,
+      totalAmount: json['totalAmount'] ?? 0, // <-- Parse totalAmount
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'customerName': customerName,
+      'customerNumber': customerNumber,
+      'date': date,
+      'products': products,
+      'totalAmount': totalAmount, // <-- Include totalAmount
+    };
   }
 }

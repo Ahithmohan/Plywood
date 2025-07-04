@@ -293,6 +293,11 @@ class _PurchaseListPageState extends State<PurchaseListPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   _buildDetailRow("Phone", item.customerNumber),
+                                  _buildDetailRow("Total Amount",
+                                      item.totalAmount.toString()),
+                                  const Divider(
+                                    color: Colors.white70,
+                                  ),
                                   const SizedBox(height: 10),
                                   ...item.products.map((product) {
                                     return Column(
