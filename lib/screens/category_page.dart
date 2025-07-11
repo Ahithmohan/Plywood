@@ -66,7 +66,7 @@ class _CategoryPageState extends State<CategoryPage> {
           'Add Category',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[900],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -106,209 +106,175 @@ class _CategoryPageState extends State<CategoryPage> {
                             return Card(
                               color: Colors.grey[800],
                               child: ListTile(
-                                title: Text(
-                                  type,
-                                  style: const TextStyle(color: Colors.white),
+                                title: SizedBox(
+                                  height: 40,
+                                  child: Card(
+                                    elevation: 5,
+                                    color: Colors.grey[800],
+                                    child: Center(
+                                      child: Text(
+                                        type,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 15,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                // trailing: GestureDetector(
-                                //   onTap: () async {
-                                //     final confirm = await showDialog<bool>(
-                                //       context: context,
-                                //       builder: (context) => AlertDialog(
-                                //         backgroundColor: Colors.grey[900],
-                                //         title: BuildTextWidget(
-                                //           text: "Confirm Delete",
-                                //           color: Colors.white,
-                                //         ),
-                                //         content: Text(
-                                //           'Are you sure you want to delete "$type"?',
-                                //           style:
-                                //               TextStyle(color: Colors.white70),
-                                //         ),
-                                //         actions: [
-                                //           TextButton(
-                                //             onPressed: () =>
-                                //                 Navigator.pop(context, false),
-                                //             child: const Text(
-                                //               'Cancel',
-                                //               style: TextStyle(
-                                //                   color: Colors.white),
-                                //             ),
-                                //           ),
-                                //           TextButton(
-                                //             onPressed: () =>
-                                //                 Navigator.pop(context, true),
-                                //             child: const Text(
-                                //               'Delete',
-                                //               style:
-                                //                   TextStyle(color: Colors.red),
-                                //             ),
-                                //           ),
-                                //         ],
-                                //       ),
-                                //     );
-                                //
-                                //     // 🔐 Check again after dialog, context may be invalid if widget was removed
-                                //     if (!mounted || confirm != true) return;
-                                //
-                                //     final success =
-                                //         await Provider.of<CategoryProvider>(
-                                //       context,
-                                //       listen: false,
-                                //     ).deleteCategory(id);
-                                //
-                                //     // 🔐 Check again after await
-                                //     if (!mounted) return;
-                                //
-                                //     ScaffoldMessenger.of(context).showSnackBar(
-                                //       SnackBar(
-                                //         content: Text(success
-                                //             ? 'Category deleted'
-                                //             : 'Failed to delete category'),
-                                //       ),
-                                //     );
-                                //   },
-                                //   child: const Icon(Icons.delete,
-                                //       color: Colors.red),
-                                // ),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit,
-                                          color: Colors.greenAccent),
-                                      onPressed: () async {
-                                        _categoryController.text = type;
+                                    Card(
+                                      color: Colors.grey[800],
+                                      elevation: 5,
+                                      shadowColor: Colors.black,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.edit,
+                                            color: Colors.greenAccent),
+                                        onPressed: () async {
+                                          _categoryController.text = type;
 
-                                        final updated =
-                                            await showDialog<String>(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            backgroundColor: Colors.grey[900],
-                                            title: const Text(
-                                              "Edit Category",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            content: TextField(
-                                              controller: _categoryController,
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                              decoration: const InputDecoration(
-                                                hintText: 'New category name',
-                                                hintStyle: TextStyle(
-                                                    color: Colors.white54),
+                                          final updated =
+                                              await showDialog<String>(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              backgroundColor: Colors.grey[900],
+                                              title: const Text(
+                                                "Edit Category",
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                child: const Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                              content: TextField(
+                                                controller: _categoryController,
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: 'New category name',
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.white54),
                                                 ),
                                               ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  final newType =
-                                                      _categoryController.text
-                                                          .trim();
-                                                  Navigator.pop(
-                                                      context, newType);
-                                                },
-                                                child: const Text(
-                                                  'Update',
-                                                  style: TextStyle(
-                                                      color: Colors.orange),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: const Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-
-                                        if (!mounted ||
-                                            updated == null ||
-                                            updated.isEmpty ||
-                                            updated == type) return;
-
-                                        final success = await provider
-                                            .updateCategory(id, updated);
-                                        if (!mounted) return;
-
-                                        if (mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(success
-                                                  ? 'Category updated'
-                                                  : 'Failed to update category'),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    final newType =
+                                                        _categoryController.text
+                                                            .trim();
+                                                    Navigator.pop(
+                                                        context, newType);
+                                                  },
+                                                  child: const Text(
+                                                    'Update',
+                                                    style: TextStyle(
+                                                        color: Colors.orange),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           );
-                                        }
 
-                                        _categoryController.clear();
-                                      },
+                                          if (!mounted ||
+                                              updated == null ||
+                                              updated.isEmpty ||
+                                              updated == type) return;
+
+                                          final success = await provider
+                                              .updateCategory(id, updated);
+                                          if (!mounted) return;
+
+                                          if (mounted) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(success
+                                                    ? 'Category updated'
+                                                    : 'Failed to update category'),
+                                              ),
+                                            );
+                                          }
+
+                                          _categoryController.clear();
+                                        },
+                                      ),
                                     ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
-                                      onPressed: () async {
-                                        final confirm = await showDialog<bool>(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            backgroundColor: Colors.grey[900],
-                                            title: const Text(
-                                              "Confirm Delete",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            content: Text(
-                                              'Are you sure you want to delete "$type"?',
-                                              style: const TextStyle(
-                                                  color: Colors.white70),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    context, false),
-                                                child: const Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
+                                    Card(
+                                      color: Colors.grey[800],
+                                      elevation: 5,
+                                      shadowColor: Colors.black,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.delete,
+                                            color: Colors.red),
+                                        onPressed: () async {
+                                          final confirm =
+                                              await showDialog<bool>(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              backgroundColor: Colors.grey[900],
+                                              title: const Text(
+                                                "Confirm Delete",
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    context, true),
-                                                child: const Text(
-                                                  'Delete',
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                ),
+                                              content: Text(
+                                                'Are you sure you want to delete "$type"?',
+                                                style: const TextStyle(
+                                                    color: Colors.white70),
                                               ),
-                                            ],
-                                          ),
-                                        );
-
-                                        if (!mounted || confirm != true) return;
-
-                                        final success =
-                                            await provider.deleteCategory(id);
-                                        if (!mounted) return;
-
-                                        if (mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(success
-                                                  ? 'Category deleted'
-                                                  : 'Failed to delete category'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, false),
+                                                  child: const Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, true),
+                                                  child: const Text(
+                                                    'Delete',
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           );
-                                        }
-                                      },
+
+                                          if (!mounted || confirm != true)
+                                            return;
+
+                                          final success =
+                                              await provider.deleteCategory(id);
+                                          if (!mounted) return;
+
+                                          if (mounted) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(success
+                                                    ? 'Category deleted'
+                                                    : 'Failed to delete category'),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ],
                                 ),

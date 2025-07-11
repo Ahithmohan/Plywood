@@ -115,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
             'Settings',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.grey[900],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

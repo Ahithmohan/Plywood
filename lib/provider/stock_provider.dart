@@ -7,8 +7,30 @@ class StockProvider extends ChangeNotifier {
   List<StockModel> _stocks = [];
   List<StockModel> get stocks => _stocks;
 
+  String _searchText = '';
+  String get searchText => _searchText;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  List<StockModel> get filteredStocks {
+    if (_searchText.isEmpty) return _stocks;
+    return _stocks
+        .where((stock) =>
+            stock.name.toLowerCase().contains(_searchText.toLowerCase()))
+        .toList();
+  }
+
+  // void setSearchText(String text) {
+  //   _searchText = text;
+  //   notifyListeners();
+  // }
+  void setSearchText(String text) {
+    if (_searchText != text) {
+      _searchText = text;
+      notifyListeners();
+    }
+  }
 
   Future<void> fetchStocks() async {
     _isLoading = true;

@@ -163,7 +163,7 @@ class _ProductViewState extends State<ProductView> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[900],
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Product View',

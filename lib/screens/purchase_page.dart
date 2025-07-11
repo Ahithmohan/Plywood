@@ -208,7 +208,7 @@ class _PurchasePageState extends State<PurchasePage> {
         automaticallyImplyLeading: false,
         title: const Text('Purchase Details',
             style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[900],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

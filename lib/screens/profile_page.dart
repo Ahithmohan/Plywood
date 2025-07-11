@@ -86,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
             'Profile Details',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.grey[900],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

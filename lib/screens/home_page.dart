@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         scrollController: _scrollController,
         hideOnScroll: true,
         indicatorColor: Colors.orange,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[900]!,
         animationDuration: const Duration(milliseconds: 300),
         animationCurve: Curves.ease,
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),

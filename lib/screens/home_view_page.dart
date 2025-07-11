@@ -27,7 +27,7 @@ class _HomeViewPageState extends State<HomeViewPage> {
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
-    final products = productProvider.products;
+    final products = productProvider.filteredProducts;
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -35,28 +35,61 @@ class _HomeViewPageState extends State<HomeViewPage> {
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 20),
-            child: Row(
+          Container(
+            color: Colors.grey[900],
+            child: Column(
               children: [
-                Text(
-                  'Plywood',
-                  style:
-                      GoogleFonts.spicyRice(color: Colors.white, fontSize: 29),
-                ),
-                Text(
-                  '!',
-                  style:
-                      GoogleFonts.spicyRice(color: Colors.orange, fontSize: 29),
-                ),
-                Spacer(),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    icon: Icon(Icons.search, color: Colors.white),
-                    onPressed: () {
-                      // Navigate to settings page
+                  padding: const EdgeInsets.only(left: 15, right: 10, top: 5),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Plywood',
+                        style: GoogleFonts.spicyRice(
+                            color: Colors.white, fontSize: 29),
+                      ),
+                      Text(
+                        '!',
+                        style: GoogleFonts.spicyRice(
+                            color: Colors.orange, fontSize: 29),
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.notification_important_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                          onPressed: () {
+                            // Navigate to settings page
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                  child: TextField(
+                    onChanged: (value) {
+                      Provider.of<ProductProvider>(context, listen: false)
+                          .setSearchText(value);
                     },
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Search product...',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.grey[850],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.search, color: Colors.white70),
+                    ),
                   ),
                 ),
               ],

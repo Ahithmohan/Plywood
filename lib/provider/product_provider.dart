@@ -30,6 +30,23 @@ class ProductProvider extends ChangeNotifier {
   //     return false;
   //   }
   // }
+
+  String _searchText = '';
+  String get searchText => _searchText;
+
+  List<ProductModel> get filteredProducts {
+    if (_searchText.isEmpty) return _products;
+    return _products
+        .where((product) =>
+            product.name.toLowerCase().contains(_searchText.toLowerCase()))
+        .toList();
+  }
+
+  void setSearchText(String text) {
+    _searchText = text;
+    notifyListeners();
+  }
+
   Future<bool> addProduct(Map<String, dynamic> productData) async {
     _isLoading = true;
     notifyListeners();
