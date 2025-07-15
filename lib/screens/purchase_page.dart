@@ -233,6 +233,7 @@ class _PurchasePageState extends State<PurchasePage> {
                             "Add Customer",
                             style: TextStyle(color: Colors.white),
                           ),
+                          // This is the content of the dialog
                           content: SizedBox(
                             width: MediaQuery.of(context).size.width / 1.5,
                             height: 140,
